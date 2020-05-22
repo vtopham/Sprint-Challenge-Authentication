@@ -3,8 +3,15 @@
 const router = require('express').Router();
 const Users = require('./auth-model.js')
 
-router.post('/register', (req, res) => {
+router.post('/register', validateUserInfo, (req, res) => {
   // implement registration
+  Users.addUser(req.body)
+    .then(response => {
+      res.status(201).json({message: `User number ${response} created`})
+    })
+    .catch(Err => {
+      res.status(500).json({message: "Error creating user", error: err})
+    })
 });
 
 router.post('/login', (req, res) => {
@@ -23,7 +30,9 @@ router.get('/users', (req, res) => {
 
 function validateUserInfo(req, res, next) {
   if (req.body && req.body.username && req.body.password) {
-    
+    next();
+  } else {
+    res.status(400).json({message: "Please include a username and password"})
   }
 }
 module.exports = router;
