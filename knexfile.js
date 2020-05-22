@@ -13,7 +13,7 @@ module.exports = {
   testing: {
     client: 'sqlite3',
     connection: {
-      filename: './database/auth.db3'
+      filename: './database/testauth.db3'
     },
     useNullAsDefault: true,
     migrations: {
