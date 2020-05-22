@@ -21,7 +21,8 @@ const SignUp = () => {
         event.preventDefault();
         axios.post(`http://localhost:3300/api/auth/register`, formState)
             .then(response => {
-                console.log(response)
+                alert(`${response.data.message} Please log in!`)
+                setFormState({username: "", password: ""})
             })
             .catch(err => {
                 console.log(err)
