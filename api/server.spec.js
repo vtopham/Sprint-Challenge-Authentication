@@ -34,12 +34,31 @@ describe('tests each in the auth router', () => {
                     // console.log(res.statusCode)
                     expect(res.statusCode).toBe(400)
                 })
-
-
         })
     })
 
     // post('/login'    
+    describe('test logging in', () => {
+        it('#1 lets you log in with credentials just created', () => {
+            return request(server).post('/api/auth/register')
+                .send({username: "test", password: "test"})
+                .then(res => {
+                    return request(server).post('/api/auth/login')
+                    .send({username: "test", password: "test"})
+                    .expect(200)
+                })
+        })
+
+        it('#2 does not let you log in with credentials just created if you use the wrong password', () => {
+            return request(server).post('/api/auth/register')
+                .send({username: "test", password: "test"})
+                .then(res => {
+                    return request(server).post('/api/auth/login')
+                    .send({username: "test", password: "testy"})
+                    .expect(403)
+                })
+        })
+    })
     
 
 
