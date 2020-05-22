@@ -31,7 +31,7 @@ describe('tests each in the auth router', () => {
             return request(server).post('/api/auth/register')
                 .send({password: "asdfasdf"})
                 .then(res => {
-                    // console.log(res.statusCode)
+                    
                     expect(res.statusCode).toBe(400)
                 })
         })
@@ -65,10 +65,56 @@ describe('tests each in the auth router', () => {
 })
 
 describe('tests the joke router endpoint', () => {
+    beforeEach( async() => {
+        await db.seed.run();
+    });
+
     //for the auth-router /api/jokes
     server.use('/api/jokes', JokesRouter);
 
     //get('/',
+    it('#1 lets you see the api once you log in with the correct credentials', () => {
+        //first register
+        return request(server).post('/api/auth/register')
+            .send({username: "test", password: "test"})
+            .then( _ => {
+                //then log in to get the token
+                return request(server).post('/api/auth/login')
+                .send({username: "test", password: "test"})
+                .then(response => {
+                    const token = response.body.token;
+                    //then use the token to access jokes
+                    return request(server).get('/api/jokes')
+                        .set({Authorization: token})
+                        .then(jokes => {
+                            expect(jokes.body.length).toBeGreaterThan(0)
+                        })
+                })
+                
+            })
+    })
+
+    it('#2 does not let you do not include the correct token', () => {
+        //first register
+        return request(server).post('/api/auth/register')
+            .send({username: "test", password: "test"})
+            .then( _ => {
+                //then log in to get the token
+                return request(server).post('/api/auth/login')
+                .send({username: "test", password: "test"})
+                .then(response => {
+                    const token = response.body.token;
+                    //then use the token to access jokes
+                    return request(server).get('/api/jokes')
+                        .set({Authorization: "nothing"})
+                        .then(jokes => {
+                            expect(500);
+                        })
+                })
+                
+            })
+    })
+
 })
 
 
