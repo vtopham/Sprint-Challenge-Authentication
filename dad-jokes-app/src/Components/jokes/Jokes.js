@@ -16,6 +16,7 @@ const Jokes = () => {
     
 
     useEffect( _ => {
+        if(token) {
         authenticatedAxios.get(`/api/jokes`)
             .then(response => {
                 console.log(response)
@@ -23,23 +24,42 @@ const Jokes = () => {
             })
             .catch(err => {
                         console.log(err)
+                        
                     })
+        } 
     },[])
 
 
-
+    const getJokes = event => {
+        event.preventDefault();
+        if(token) {
+            authenticatedAxios.get(`/api/jokes`)
+                .then(response => {
+                    console.log(response)
+                    setJokes(response.data)
+                })
+                .catch(err => {
+                            console.log(err)
+                            
+                        })
+        } else {
+            alert("You must log in to do that")
+        }
+    }
     
-
-    return (
-        <>
-            <h1>This is the jokes page</h1>
-            {jokes.map(obj => {
-                return <JokeCard joke = {obj.joke}/>
-            })}
-            {/* {jokes.length>0? <p>{jokes[0].joke}</p> : null} */}
-            
-        </>
-    )
+    if(!token) {return <h1>Log In First!</h1>} else {
+        return (
+            <>
+                <h1>This is the jokes page</h1>
+                <button onClick = {getJokes}>Get Jokes</button>
+                {jokes.map(obj => {
+                    return <JokeCard key = {obj.id} joke = {obj.joke}/>
+                })}
+                
+                
+            </>
+        )
+    }
 }
 
 export default Jokes;
