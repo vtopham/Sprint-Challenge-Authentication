@@ -27,7 +27,7 @@ router.post('/register', validateUserInfo, (req, res) => {
   //add the user
   Users.addUser(req.body)
     .then(response => {
-      res.status(201).json({message: `User number ${response} created`})
+      res.status(201).json({message: `User number ${response} created`, user: response})
     })
     .catch(Err => {
       res.status(500).json({message: "Error creating user", error: err})
