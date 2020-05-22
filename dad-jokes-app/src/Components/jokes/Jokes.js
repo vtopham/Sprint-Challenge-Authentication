@@ -1,5 +1,6 @@
 import React, { useEffect, useState} from 'react'
 import axios from 'axios'
+import JokeCard from './JokeCard'
 
 
 
@@ -11,7 +12,7 @@ const Jokes = () => {
         headers: {Authorization: token}
     })
 
-    const [jokes, setJokes] = useState([])
+    const [jokes, setJokes] = useState([]);
     
 
     useEffect( _ => {
@@ -25,20 +26,17 @@ const Jokes = () => {
                     })
     },[])
 
-    // if(!token) {
-    //     return(
-    //         <>
-    //         <h1>Please Log In.</h1>
-    //         </>
-    //     )
-    // }
-    
+
 
     
 
     return (
         <>
             <h1>This is the jokes page</h1>
+            {jokes.map(obj => {
+                return <JokeCard joke = {obj.joke}/>
+            })}
+            {/* {jokes.length>0? <p>{jokes[0].joke}</p> : null} */}
             
         </>
     )
